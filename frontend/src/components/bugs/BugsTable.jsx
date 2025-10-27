@@ -7,12 +7,11 @@ import API_BASE_URL from '../../api/BaseApi.jsx';
 
 
 const StatusPill = ({ status }) => {
-  const base = "px-2.5 py-0.5 text-xs font-semibold rounded-full inline-block capitalize";
+  const base = "px-2.5 py-0.5 text-sm font-semibold rounded-full inline-block capitalize";
   const styles = {
-    pending: "bg-yellow-100 text-yellow-800",
-    "in progress": "bg-blue-100 text-blue-800",
-    closed: "bg-green-100 text-green-800",
-    new: "bg-gray-100 text-gray-800"
+        started: "bg-yellow-100 text-yellow-800",
+        resolved: "bg-green-100 text-green-800",
+        new: "bg-blue-300 text-gray-800"
   };
   return <span className={`${base} ${styles[status.toLowerCase()] || styles.new}`}>{status}</span>;
 };
@@ -87,11 +86,11 @@ export default function BugTable({ bugs, onBugsUpdated }) {
           <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bug Details</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              <th scope="col" className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Bug Details</th>
+              <th scope="col" className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th scope="col" className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+              <th scope="col" className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
+              <th scope="col" className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -99,14 +98,14 @@ export default function BugTable({ bugs, onBugsUpdated }) {
               <tr key={bug.id} onClick={() => handleRowClick(bug.id)} className="hover:bg-gray-50 cursor-pointer">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-3">
-                      <PriorityIndicator type={bug.type} />
-                      <span className="text-sm font-medium text-gray-900">{bug.title}</span>
+                      <PriorityIndicator type={bug.status} />
+                      <span className="text-s font-medium text-gray-900">{bug.title}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <StatusPill status={bug.status} />
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-s text-gray-500">
                   <div className="flex items-center gap-2">
                       <Calendar size={16} />
                       <span>{bug.deadline ? new Date(bug.deadline).toLocaleDateString() : 'Not set'}</span>

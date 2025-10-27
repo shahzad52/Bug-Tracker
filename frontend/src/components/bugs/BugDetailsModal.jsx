@@ -8,7 +8,6 @@ const StatusBadge = ({ bugId, status, type, onStatusChange, isDeveloper }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [updating, setUpdating] = useState(false);
     
-    console.log('StatusBadge Props:', { bugId, status, type, isDeveloper });
     
     const styles = {
       'started': 'bg-blue-100 text-blue-800',
@@ -149,7 +148,6 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
         const file = event.target.files[0];
         if (!file) return;
 
-        // Check file size (5MB limit)
         if (file.size > 5 * 1024 * 1024) {
             alert('File size must be less than 5MB');
             return;
@@ -159,7 +157,6 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
             setSaving(true);
             const token = localStorage.getItem('access');
             
-            // First upload the file
             const formData = new FormData();
             formData.append('file', file);
             
@@ -174,7 +171,7 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                 }
             );
             
-            // Then update the bug with the file path
+            
             const response = await axios.patch(
                 `${API_BASE_URL}/api/bugs/${bugId}/`,
                 {
@@ -188,7 +185,7 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                 }
             );
             
-            // Update the bug state
+            
             setBug(response.data);
             if (response.data.bug_attachment?.path) {
                 setSelectedImage(response.data.bug_attachment.path);
@@ -246,7 +243,7 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                 <header className="flex justify-between items-start p-5 border-b gap-4">
                    <div className="flex items-center flex-wrap gap-4">
                         <div className="flex items-center gap-3">
-                            {/* Assignee */}
+                            
                             {bug.assignee && (
                                 <div className="relative group">
                                     <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white">
@@ -262,14 +259,14 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                                             </div>
                                         )}
                                     </div>
-                                    {/* Tooltip */}
+                                    
                                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                                         {`Developer: ${bug.assignee.name || 'Unknown'}`}
                                     </div>
                                 </div>
                             )}
                             
-                            {/* Creator (QA) */}
+            
                             {bug.creator && (
                                 <div className="relative group">
                                     <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white">
@@ -285,7 +282,6 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                                             </div>
                                         )}
                                     </div>
-                                    {/* Tooltip */}
                                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                                         {`QA: ${bug.creator.name || 'Unknown'}`}
                                     </div>

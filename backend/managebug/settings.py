@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
+from dotenv import load_dotenv 
+
+#load_dotenv()
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key")
 DEBUG = True
@@ -59,10 +62,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("POSTGRES_DB", "bugtracker_db"),
-        "USER": os.environ.get("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "1234"),
-        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-        "PORT": os.environ.get("POSTGRES_PORT", "5433"),
+        "USER": os.environ.get("POSTGRES_USER",'postgres'),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD",'1234'),
+        "HOST": os.environ.get("POSTGRES_HOST",'localhost'),
+        "PORT": os.environ.get("POSTGRES_PORT",'5433'),
     }
 }
 
@@ -98,7 +101,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 PROFILE_PICTURES_DIR = 'profile_pictures'
 PROJECT_LOGOS_DIR = 'project_logos'

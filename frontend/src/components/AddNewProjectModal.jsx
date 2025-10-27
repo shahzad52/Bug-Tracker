@@ -68,12 +68,6 @@ export default function AddNewProjectModal({ user, onClose, onProjectAdded }) {
             console.error('Project creation error:', error);
             if (error.message === 'Manager ID is required') {
                 setError('Manager information is missing. Please try logging in again.');
-            } else if (error.response?.data) {
-
-                const errorMessage = typeof error.response.data === 'object' 
-                    ? Object.values(error.response.data).join('. ')
-                    : error.response.data;
-                setError(errorMessage);
             } else {
                 setError('Failed to create project. Please try again.');
             }
@@ -96,7 +90,7 @@ export default function AddNewProjectModal({ user, onClose, onProjectAdded }) {
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4">
+            <div className="bg-white rounded-xl shadow-2xl w-[600px] h-[650px] mx-4 overflow-auto">
                 <div className="flex justify-between items-center p-6 border-b">
                     <h2 className="text-xl font-semibold text-gray-900">Create New Project</h2>
                     <button onClick={handleClose} className="text-gray-400 hover:text-gray-600">
@@ -112,7 +106,7 @@ export default function AddNewProjectModal({ user, onClose, onProjectAdded }) {
                     )}
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-s font-medium text-gray-700 mb-2">
                             Project Name
                         </label>
                         <input
@@ -126,8 +120,8 @@ export default function AddNewProjectModal({ user, onClose, onProjectAdded }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Description
+                        <label className="block text-s font-medium text-black-700 mb-2">
+                            Short Details
                         </label>
                         <textarea
                             name="detail"

@@ -50,7 +50,7 @@ const ProfileSettings = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) { 
         toast.error('Image size should be less than 5MB');
         return;
       }
@@ -69,7 +69,7 @@ const ProfileSettings = () => {
     try {
       const data = new FormData();
       
-      // Only append changed fields
+      
       if (formData.name !== userData?.name) {
         data.append('name', formData.name);
       }
@@ -124,9 +124,9 @@ const ProfileSettings = () => {
             <h1 className="text-2xl font-bold text-gray-900 mb-8">Profile Settings</h1>
             
             <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center justify-center space-x-8">
                 <div className="relative">
-                  <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100">
+                  <div className="w-32 h-32 rounded-full flex overflow-hidden bg-gray-100">
                     {previewUrl ? (
                       <img
                         src={previewUrl}

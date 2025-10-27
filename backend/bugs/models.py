@@ -38,6 +38,7 @@ class Bugs(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ['-created_at']
         constraints = [
             models.UniqueConstraint(fields=["project", "title"], name="unique_bug_title_per_project")
         ]

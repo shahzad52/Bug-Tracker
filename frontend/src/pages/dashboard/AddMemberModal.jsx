@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../api/BaseApi";
 
 export default function AddMemberModal({ project, onClose }) {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ export default function AddMemberModal({ project, onClose }) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/users/", {
+        const res = await axios.get(`${API_BASE_URL}/api/users/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const filtered = res.data.filter(
@@ -33,7 +34,7 @@ export default function AddMemberModal({ project, onClose }) {
     try {
       setLoading(true);
       await axios.post(
-        "http://127.0.0.1:8000/api/project-users/",
+        `${API_BASE_URL}/api/project-users/`,
         { project: project.id, user: selectedUser },
         { headers: { Authorization: `Bearer ${token}` } }
       );

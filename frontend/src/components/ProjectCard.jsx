@@ -37,7 +37,7 @@ export default function ProjectCard({ project, onClick }) {
             onClick={onClick} 
             className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 cursor-pointer group"
         >
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-[#E6F7FF] mb-3">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-[#d1eaf6] mb-3">
                 {project.logo_url || project.logo ? (
                     <img 
                         src={`${API_BASE_URL}${project.logo_url || `/media/${project.logo}`}`} 

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Briefcase, LogOut, Settings } from "lucide-react";
-import { Menu, Transition } from '@headlessui/react';
+import { Menu,MenuButton,MenuItems, Transition } from '@headlessui/react';
 import NotificationsPopover from './NotificationsPopover';
 
 const ManageBugLogo = () => (
@@ -55,7 +55,7 @@ export default function TopNavBar({ user }) {
             {<NotificationsPopover />}
             
             <Menu as="div" className="relative">
-                <Menu.Button className="flex items-center gap-3 focus:outline-none">
+                <MenuButton className="flex items-center gap-3 focus:outline-none">
                     <div className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden">
                         {user.profile_picture_url ? (
                             <img 
@@ -73,7 +73,7 @@ export default function TopNavBar({ user }) {
                         <p className="text-sm font-semibold text-gray-800">{user.name}</p>
                         <p className="text-xs text-gray-500 capitalize">{user.role}</p>
                     </div>
-                </Menu.Button>
+                </MenuButton>
                 <Transition
                     as={Fragment}
                     enter="transition ease-out duration-100"
@@ -83,32 +83,32 @@ export default function TopNavBar({ user }) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <MenuItems className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="px-1 py-1">
-                            <Menu.Item>
+                            <MenuItems>
                                 {({ active }) => (
-                                    <NavLink 
+                                    <NavLink
                                         to="/profile"
-                                        className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                        className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} group flex rounded-md items-center w-full px-2 py-2 text-sm hover:bg-blue-500 hover:text-white`}
                                     >
                                         <Settings className="mr-2 h-5 w-5" />
                                         Profile Settings
                                     </NavLink>
                                 )}
-                            </Menu.Item>
-                            <Menu.Item>
+                            </MenuItems>
+                            <MenuItems>
                                 {({ active }) => (
                                     <button 
                                         onClick={handleLogout} 
-                                        className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                        className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} group flex rounded-md items-center w-full px-2 py-2 text-sm hover:bg-blue-500 hover:text-white`}
                                     >
                                         <LogOut className="mr-2 h-5 w-5" />
                                         Logout
                                     </button>
                                 )}
-                            </Menu.Item>
+                            </MenuItems>
                         </div>
-                    </Menu.Items>
+                    </MenuItems>
                 </Transition>
             </Menu>
           </div>

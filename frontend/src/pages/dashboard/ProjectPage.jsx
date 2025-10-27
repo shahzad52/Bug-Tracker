@@ -11,14 +11,14 @@ import API_BASE_URL from '../../api/BaseApi';
 
 
 export default function ProjectPage() {
-  const navigate = useNavigate();  // Move this to the top
+  const navigate = useNavigate(); 
   const { projectId } = useParams();
   const { state } = useLocation();
   const [project, setProject] = useState(null);
   const [bugs, setBugs] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
   const [isLoading, setIsLoading] = useState(true);
-  // If coming from navigation (state.role exists), update localStorage
+  
   useEffect(() => {
     if (state?.role) {
       localStorage.setItem('userRole', state.role);
@@ -27,7 +27,7 @@ export default function ProjectPage() {
   
   const userRole = state?.role || localStorage.getItem('userRole');
   
-  // Redirect if no role is found
+  
   useEffect(() => {
     if (!userRole) {
       navigate('/dashboard');
@@ -45,13 +45,13 @@ export default function ProjectPage() {
       setIsLoading(true);
       console.log('Fetching data for project ID:', projectId);
       try {
-        // First get user data
+        
         const userRes = await axios.get(`${API_BASE_URL}/api/auth/me/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(userRes.data);
 
-        // Then get project and bugs data
+        
         const [projectRes, bugsRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/projects/${projectId}/`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -63,39 +63,27 @@ export default function ProjectPage() {
         
         setProject(projectRes.data);
         
-        // Debug logs
-        console.log('User Role:', userRole);
-        console.log('User Data:', userRes.data);
-        console.log('All Bugs:', bugsRes.data);
-        
-        // First check the bug data structure
-        console.log('Sample bug structure:', bugsRes.data[0]);
-        
-        // First filter bugs by project
         let projectBugs = bugsRes.data.filter(bug => {
           console.log('Checking bug:', bug.id, 'project:', bug.project, 'against projectId:', projectId);
           return bug.project === parseInt(projectId);
         });
-        console.log('Project Bugs:', projectBugs);
-        
-        // Then filter based on role and user ID
+      
         if (userRole === 'developer' && userRes.data?.id) {
           projectBugs = projectBugs.filter(bug => {
             const assigneeId = typeof bug.assignee === 'object' ? bug.assignee?.id : bug.assignee;
             return assigneeId === userRes.data.id;
           });
         } else if (userRole === 'qa' && userRes.data?.id) {
-          // QA should see bugs they created
           console.log('QA filtering - Current user ID:', userRes.data.id);
           projectBugs = projectBugs.filter(bug => {
             console.log('Checking bug:', bug.id, 'creator:', bug.creator);
-            // Check if bug.creator exists and matches user ID
+  
             const creatorId = typeof bug.creator === 'object' ? bug.creator?.id : bug.creator;
             return creatorId === userRes.data.id;
           });
           console.log('Bugs after QA filtering:', projectBugs);
         } else if (userRole === 'manager') {
-          // Manager sees all bugs in the project
+  
           console.log('Manager view - showing all project bugs');
         }
         
@@ -134,9 +122,7 @@ export default function ProjectPage() {
     const fetchBugs = async () => {
       const token = localStorage.getItem('access');
       try {
-        console.log('Refreshing bugs with role:', userRole);
-        
-        // Get fresh user data to ensure we have the current role
+        console.log('Refreshing bugs with role:', userRole); 
         const userRes = await axios.get(`${API_BASE_URL}/api/auth/me/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -146,12 +132,9 @@ export default function ProjectPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('All fetched bugs:', response.data);
-        
-        // Filter bugs by project first
         let projectBugs = response.data.filter(bug => bug.project === parseInt(projectId));
         console.log('Project filtered bugs:', projectBugs);
         
-        // Then apply role-based filtering
         if (userRole === 'developer' && userRes.data?.id) {
           projectBugs = projectBugs.filter(bug => {
             const assigneeId = typeof bug.assignee === 'object' ? bug.assignee?.id : bug.assignee;
@@ -166,7 +149,7 @@ export default function ProjectPage() {
           });
           console.log('Bugs after QA filtering:', projectBugs);
         } else if (userRole === 'manager') {
-          // Manager sees all bugs in the project
+          
           console.log('Manager view - showing all project bugs after refresh');
         }
         

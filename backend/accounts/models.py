@@ -74,7 +74,7 @@ class Notification(models.Model):
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    related_link = models.CharField(max_length=255, blank=True, null=True)  # Store URLs for navigation
+    related_link = models.CharField(max_length=255, blank=True, null=True)  
     
     class Meta:
         ordering = ['-created_at']
