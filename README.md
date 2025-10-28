@@ -7,7 +7,7 @@ A web application designed for managing software projects, tracking bugs, and fa
 ## Features
 
 ### Authentication & Roles
-* **Sign Up/Login/Logout:** Secure user authentication using email/password via Supabase Auth.
+* **Sign Up/Login/Logout:** Secure user authentication using email/password 
 * **User Roles:** Three distinct roles with specific permissions:
     * **Manager:** Can create projects and assign users.
     * **QA:** Can create bugs within assigned projects.
