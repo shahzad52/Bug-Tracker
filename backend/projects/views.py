@@ -4,6 +4,7 @@ from .models import Projects, ProjectUsers
 from .serializers import ProjectsSerializer, ProjectUsersSerializer
 from .permissions import IsManager, IsProjectManager
 from rest_framework.decorators import action
+from django.core.mail import send_mail
 
 class ProjectsViewSet(viewsets.ModelViewSet):
     
@@ -53,7 +54,7 @@ class ProjectUsersViewSet(viewsets.ModelViewSet):
         from accounts.models import Notification, User
         project_id = request.data.get("project")
         user_id = request.data.get("user")
-        
+        manager = request.user
         if not project_id or not user_id:
             return Response({"error": "project and user are required"}, status=status.HTTP_400_BAD_REQUEST)
         if ProjectUsers.objects.filter(project_id=project_id, user_id=user_id).exists():
@@ -72,7 +73,13 @@ class ProjectUsersViewSet(viewsets.ModelViewSet):
                 message=f'You have been added to project "{project.name}"',
                 related_link=f'/projects/{project_id}'
             )
-            
+            send_mail(
+                        'You are added to a New Project',
+                        f'You have been added to project "{project.name}" by Manager "{manager.name}"',
+                        None, 
+                        [added_user.email], 
+                        fail_silently=False,
+                    )
         return response
 
     

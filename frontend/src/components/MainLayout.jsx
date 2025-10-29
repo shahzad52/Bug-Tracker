@@ -5,8 +5,7 @@ import TopNavBar from "./TopNavBar";
 import API_BASE_URL from "../api/BaseApi";
 
 export default function MainLayout() {
-  const [user, setUser]
-= useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 

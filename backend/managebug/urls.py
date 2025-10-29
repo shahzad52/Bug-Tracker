@@ -9,6 +9,7 @@ from projects.views import ProjectsViewSet, ProjectUsersViewSet
 from bugs.views import BugsViewSet
 from bugs.upload_views import upload_file
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from projects.llms_feedback import generate_ai_response
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -31,6 +32,7 @@ urlpatterns = [
     path('api/notifications/', NotificationListView.as_view(), name='notification-list'),
     path('api/notifications/<int:pk>/read/', NotificationMarkReadView.as_view(), name='notification-mark-read'),
     path('api/upload/', upload_file, name='file-upload'),
+    path('generate-ai/',generate_ai_response,name='generate-ai')
 ]
 
 

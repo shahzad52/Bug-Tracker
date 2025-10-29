@@ -45,13 +45,12 @@ export default function ProjectPage() {
       setIsLoading(true);
       console.log('Fetching data for project ID:', projectId);
       try {
-        
+
         const userRes = await axios.get(`${API_BASE_URL}/api/auth/me/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(userRes.data);
 
-        
         const [projectRes, bugsRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/projects/${projectId}/`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -64,7 +63,6 @@ export default function ProjectPage() {
         setProject(projectRes.data);
         
         let projectBugs = bugsRes.data.filter(bug => {
-          console.log('Checking bug:', bug.id, 'project:', bug.project, 'against projectId:', projectId);
           return bug.project === parseInt(projectId);
         });
       
@@ -81,7 +79,7 @@ export default function ProjectPage() {
             const creatorId = typeof bug.creator === 'object' ? bug.creator?.id : bug.creator;
             return creatorId === userRes.data.id;
           });
-          console.log('Bugs after QA filtering:', projectBugs);
+          
         } else if (userRole === 'manager') {
   
           console.log('Manager view - showing all project bugs');

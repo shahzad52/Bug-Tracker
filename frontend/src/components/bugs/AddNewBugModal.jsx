@@ -54,8 +54,8 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
             }
         };
         fetchProjectDevelopers();
-    }, [projectId]); 
-    
+    }, [projectId]);
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -73,11 +73,30 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
         }
     };
 
+    const generateWithAI = async () => {
+        try {
+            setLoading(true);
+            setError('');
+            const response = await axios.post(
+                `${API_BASE_URL}/generate-ai/`,
+                { prompt: `Generate a short 2 lines only bug description (plaintext without any headings) for this bug titled "${title}" (for a bugtracking application.)` },
+                { headers: { "Content-Type": "application/json" } }
+            );
+            const aiText = response.data.response || "No details generated.";
+            setDetail(aiText);
+        } catch (error) {
+            console.error("AI generation failed:", error);
+            setError("Failed to generate details using AI.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!title) {
-          setError('Bug title is required.');
-          return;
+            setError('Bug title is required.');
+            return;
         }
         setError('');
         setLoading(true);
@@ -93,7 +112,7 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
                 const formData = new FormData();
                 formData.append('file', attachment);
                 formData.append('type', 'bug_attachment');
-                
+
                 const uploadResponse = await axios.post(`${API_BASE_URL}/api/upload/`, formData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -112,14 +131,14 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
                 assignee: assigneeId ? Number(assigneeId) : null,
                 deadline: deadline || null,
                 creator: userResponse.data.id,
-                bug_attachment: attachmentPath ? { 
+                bug_attachment: attachmentPath ? {
                     path: uploadResponse.data.path,
                     filename: uploadResponse.data.filename
                 } : null
             };
 
             await axios.post(`${API_BASE_URL}/api/bugs/`, bugData, {
-                headers: { 
+                headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
@@ -135,9 +154,9 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
     };
 
     return (
-        
+
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="bg-white rounded-xl shadow-2xl w-auto h-auto animate-slide-up">
+            <div className="bg-white rounded-xl shadow-2xl w-[750px] h-[850px]">
                 <div className="flex justify-between items-center p-5 border-b">
                     <h2 className="text-xl font-semibold text-gray-800">Add new bug</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={24} /></button>
@@ -146,10 +165,10 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
                     <div className="flex flex-col sm:flex-row gap-4">
                         <div className="relative w-full sm:w-1/3">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <select 
-                                value={assigneeId} 
-                                onChange={(e) => setAssigneeId(e.target.value)} 
-                                className="w-full pl-10 pr-4 py-2.5 bg-white text-black border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            <select
+                                value={assigneeId}
+                                onChange={(e) => setAssigneeId(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2.5 bg-white text-black border rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="">Assign to</option>
                                 {projectUsers.length === 0 ? (
@@ -175,30 +194,42 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
                         </div>
                         <div className="relative w-full sm:w-1/3">
                             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input 
-                                type="date" 
-                                value={deadline} 
-                                onChange={(e) => setDeadline(e.target.value)} 
-                                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            <input
+                                type="date"
+                                value={deadline}
+                                onChange={(e) => setDeadline(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="title" className="text-sm font-medium text-gray-700 mb-1 block">Add title</label>
-                        <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Add bug title here " required className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <label htmlFor="title" className="text-m font-medium text-gray-700 mb-1 block">Add title</label>
+                        <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Add title here " required className="w-full px-4 py-7 bg-white rounded-lg  " />
                     </div>
-                     <div>
-                        <label htmlFor="detail" className="text-sm font-medium text-gray-700 mb-1 block">Bug details</label>
+                    <div>
+                        <div className="flex justify-between items-center mb-2">
+                            <label htmlFor="detail" className="block text-s font-medium text-black-700">
+                                Bug details
+                            </label>
+                            <button
+                                type="button"
+                                onClick={generateWithAI}
+                                disabled={loading || !title}
+                                className="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                            >
+                                Generate with AI
+                            </button>
+                        </div>
                         <textarea id="detail" value={detail} onChange={(e) => setDetail(e.target.value)} placeholder="Add here" rows="3" className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
                     <div>
                         <label className="text-sm font-medium text-gray-700 mb-1 block">Bug Screenshot</label>
-                        <label className="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors cursor-pointer">
+                        <label className="relative flex flex-col items-center justify-center cursor-pointer">
                             {attachmentPreview ? (
                                 <div className="relative w-full">
-                                    <img 
-                                        src={attachmentPreview} 
-                                        alt="Bug screenshot preview" 
+                                    <img
+                                        src={attachmentPreview}
+                                        alt="Bug screenshot preview"
                                         className="max-h-48 mx-auto rounded"
                                     />
                                     <button
@@ -230,10 +261,10 @@ export default function AddNewBugModal({ projectId, onClose, onBugAdded }) {
                             />
                         </label>
                     </div>
-                     {error && <p className="text-sm text-red-600">{error}</p>}
+                    {error && <p className="text-sm text-red-600">{error}</p>}
                     <div className="flex justify-end pt-4">
                         <button type="submit" disabled={loading} className="px-5 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400">
-                            {loading ? 'Adding...' : 'Add'}
+                            {loading ? 'Add' : 'Add'}
                         </button>
                     </div>
                 </form>

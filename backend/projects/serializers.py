@@ -23,3 +23,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
                 return obj.logo
             return f'/media/{obj.logo}'
         return None
+
+class PromptSerializer(serializers.Serializer):
+    prompt = serializers.CharField(max_length=2000 , required = True)
+                                   

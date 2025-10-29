@@ -43,14 +43,20 @@ export default function ManagerDashboard({ user }) {
   );
 
   const handleProjectClick = (project) => {
-    
+
     localStorage.setItem('userRole', 'manager');
     navigate(`/projects/${project.id}`, { state: { role: 'manager' } });
-  };  const handleAddMember = (project) => {
+  }; const handleAddMember = (project) => {
     setSelectedProject(project);
     setMemberModalOpen(true);
   };
-
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center">
+        <div className="animate-pulse text-gray-500">Loading projects...</div>
+      </div>
+    );
+  }
   return (
     <div className="p-6 max-w-[1400px] mx-auto">
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
@@ -69,8 +75,8 @@ export default function ManagerDashboard({ user }) {
               className="w-full pl-11 pr-4 py-2.5 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)} 
+          <button
+            onClick={() => setIsModalOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             <Plus size={20} />
@@ -97,12 +103,14 @@ export default function ManagerDashboard({ user }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map(project => (
             <div key={project.id}>
-              <ProjectCard 
+              <ProjectCard
                 project={project}
                 onClick={() => handleProjectClick(project)}
               />
             </div>
           ))}
+
+
         </div>
       ) : (
         <div className="text-center py-16 bg-white rounded-lg border-2 border-dashed">

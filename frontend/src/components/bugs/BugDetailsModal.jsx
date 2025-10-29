@@ -7,13 +7,13 @@ import API_BASE_URL from '../../api/BaseApi';
 const StatusBadge = ({ bugId, status, type, onStatusChange, isDeveloper }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [updating, setUpdating] = useState(false);
-    
-    
+
+
     const styles = {
-      'started': 'bg-blue-100 text-blue-800',
-      'completed': 'bg-green-100 text-green-800',
-      'resolved': 'bg-green-100 text-green-800',
-      'new': 'bg-gray-100 text-gray-800'
+        'started': 'bg-blue-100 text-blue-800',
+        'completed': 'bg-green-100 text-green-800',
+        'resolved': 'bg-green-100 text-green-800',
+        'new': 'bg-gray-100 text-gray-800'
     };
 
     const statusOptionsByType = {
@@ -25,14 +25,14 @@ const StatusBadge = ({ bugId, status, type, onStatusChange, isDeveloper }) => {
 
     const handleStatusChange = async (newStatus) => {
         if (!isDeveloper) return;
-        
+
         setUpdating(true);
         try {
             const token = localStorage.getItem('access');
             await axios.patch(
                 `${API_BASE_URL}/api/bugs/${bugId}/`,
                 { status: newStatus },
-                { headers: { Authorization: `Bearer ${token}` }}
+                { headers: { Authorization: `Bearer ${token}` } }
             );
             onStatusChange && onStatusChange(newStatus);
         } catch (error) {
@@ -45,7 +45,7 @@ const StatusBadge = ({ bugId, status, type, onStatusChange, isDeveloper }) => {
 
     return (
         <div className="relative inline-block">
-            <button 
+            <button
                 type="button"
                 onClick={() => isDeveloper && !updating && setShowDropdown(!showDropdown)}
                 className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg ${styles[status.toLowerCase()] || styles.new} 
@@ -57,14 +57,14 @@ const StatusBadge = ({ bugId, status, type, onStatusChange, isDeveloper }) => {
                     updating ? (
                         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                     ) : (
-                        <ChevronDown 
-                            size={16} 
-                            className={`transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} 
+                        <ChevronDown
+                            size={16}
+                            className={`transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
                         />
                     )
                 )}
             </button>
-            
+
             {showDropdown && isDeveloper && (
                 <div className="absolute left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                     <div className="py-1" role="menu" aria-orientation="vertical">
@@ -89,8 +89,8 @@ const StatusBadge = ({ bugId, status, type, onStatusChange, isDeveloper }) => {
 const UserAvatar = ({ user }) => (
     <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white">
         {typeof user === 'object' && user?.profile_picture_url ? (
-            <img 
-                src={user.profile_picture_url} 
+            <img
+                src={user.profile_picture_url}
                 alt={user?.name || 'User'}
                 className="w-full h-full object-cover"
             />
@@ -114,33 +114,33 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
     useEffect(() => {
         const fetchUserAndBugDetails = async () => {
             if (!bugId) return;
-            
+
             const token = localStorage.getItem('access');
             setLoading(true);
-            
+
             try {
-                
+
                 const userResponse = await axios.get(`${API_BASE_URL}/api/auth/me/`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 console.log('Current user details:', userResponse.data);
                 setUserRole(userResponse.data.role);
-                
-               
+
+
                 const bugResponse = await axios.get(`${API_BASE_URL}/api/bugs/${bugId}/`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 console.log('Bug details fetched:', bugResponse.data);
                 setBug(bugResponse.data);
                 setEditedDetail(bugResponse.data.detail || '');
-                
+
             } catch (error) {
                 console.error("Failed to fetch data:", error);
             } finally {
                 setLoading(false);
             }
         };
-        
+
         fetchUserAndBugDetails();
     }, [bugId]);
 
@@ -156,10 +156,10 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
         try {
             setSaving(true);
             const token = localStorage.getItem('access');
-            
+
             const formData = new FormData();
             formData.append('file', file);
-            
+
             const uploadResponse = await axios.post(
                 `${API_BASE_URL}/api/upload/`,
                 formData,
@@ -170,8 +170,8 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                     }
                 }
             );
-            
-            
+
+
             const response = await axios.patch(
                 `${API_BASE_URL}/api/bugs/${bugId}/`,
                 {
@@ -184,15 +184,15 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                     }
                 }
             );
-            
-            
+
+
             setBug(response.data);
             if (response.data.bug_attachment?.path) {
                 setSelectedImage(response.data.bug_attachment.path);
             }
-            
+
             onBugUpdated && onBugUpdated();
-            
+
         } catch (error) {
             console.error('Upload error:', error);
             alert('Failed to upload image. Please try again.');
@@ -232,24 +232,33 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
     if (loading || !bug) {
         return (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fade-in">
-                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
             </div>
         )
     }
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl animate-slide-up">
+            <div className="bg-white rounded-xl shadow-2xl w-[750px] h-[850px] animate-slide-up">
                 <header className="flex justify-between items-start p-5 border-b gap-4">
-                   <div className="flex items-center flex-wrap gap-4">
+                    <div className="flex items-center flex-wrap gap-4">
                         <div className="flex items-center gap-3">
-                            
+                            <StatusBadge
+                                bugId={bugId}
+                                status={bug.status}
+                                type={bug.type}
+                                onStatusChange={(newStatus) => {
+                                    setBug({ ...bug, status: newStatus });
+                                    onStatusChange && onStatusChange(bugId, newStatus);
+                                }}
+                                isDeveloper={userRole === 'developer'}
+                            />
                             {bug.assignee && (
                                 <div className="relative group">
                                     <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white">
                                         {bug.assignee.profile_picture_url ? (
-                                            <img 
-                                                src={bug.assignee.profile_picture_url} 
+                                            <img
+                                                src={bug.assignee.profile_picture_url}
                                                 alt={bug.assignee.name || 'Assignee'}
                                                 className="w-full h-full object-cover"
                                             />
@@ -259,20 +268,20 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                                             </div>
                                         )}
                                     </div>
-                                    
+
                                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                                         {`Developer: ${bug.assignee.name || 'Unknown'}`}
                                     </div>
                                 </div>
                             )}
-                            
-            
+
+
                             {bug.creator && (
                                 <div className="relative group">
                                     <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white">
                                         {bug.creator.profile_picture_url ? (
-                                            <img 
-                                                src={bug.creator.profile_picture_url} 
+                                            <img
+                                                src={bug.creator.profile_picture_url}
                                                 alt={bug.creator.name || 'Creator'}
                                                 className="w-full h-full object-cover"
                                             />
@@ -288,19 +297,8 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                                 </div>
                             )}
                         </div>
-                        
-                        <StatusBadge 
-                            bugId={bugId}
-                            status={bug.status}
-                            type={bug.type}
-                            onStatusChange={(newStatus) => {
-                                setBug({ ...bug, status: newStatus });
-                                onStatusChange && onStatusChange(bugId, newStatus);
-                            }}
-                            isDeveloper={userRole === 'developer'}
-                        />
-                   </div>
-                   <div className="flex items-center gap-4">
+                    </div>
+                    <div className="flex items-center gap-4">
                         <div className="text-right">
                             <p className="text-xs text-gray-500">CREATED</p>
                             <p className="text-sm font-medium text-gray-800">{new Date(bug.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
@@ -308,7 +306,7 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                         <button onClick={onClose} className="text-gray-400 bg-gray-100 rounded-full p-2 hover:bg-gray-200 flex-shrink-0">
                             <X size={20} />
                         </button>
-                   </div>
+                    </div>
                 </header>
 
                 <div className="p-6 space-y-5">
@@ -342,8 +340,7 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                             <div className="p-3 bg-gray-200 rounded-full">
                                 <Image size={24} className="text-gray-500" />
                             </div>
-                            <p className="mt-3 text-sm font-semibold text-gray-700">Upload Screenshot (.png or .gif only)</p>
-                            <p className="mt-1 text-xs text-gray-500">Max file size: 5MB</p>
+                            <p className="mt-3 text-sm font-semibold text-gray-700">Add image here</p>
                             <input
                                 type="file"
                                 accept=".png,.gif"
@@ -357,7 +354,6 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                                 <Image size={24} className="text-gray-500" />
                             </div>
                             <p className="mt-3 text-sm font-semibold text-gray-700">No screenshot available</p>
-                            <p className="mt-1 text-xs text-gray-500">Only developers can add screenshots</p>
                         </div>
                     )}
 
@@ -408,8 +404,11 @@ export default function BugDetailsModal({ bugId, onClose, onStatusChange, onBugU
                         )}
                     </div>
                 </div>
+
             </div>
+
         </div>
+
     );
 }
 

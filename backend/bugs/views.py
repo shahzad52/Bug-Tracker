@@ -5,6 +5,9 @@ from .serializers import BugSerializer
 from projects.models import ProjectUsers
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.decorators import parser_classes
+from django.core.mail import send_mail
+
+
 
 class BugsViewSet(viewsets.ModelViewSet):
     serializer_class = BugSerializer
@@ -43,6 +46,13 @@ class BugsViewSet(viewsets.ModelViewSet):
                     message=f'You have been assigned a new bug: {bug.title}',
                     related_link=f'/projects/{project_id}'
                 )
+                send_mail(
+                        'New Bug Assigned',
+                        f'You have been assigned a new bug: {bug.title} by QA "{user.name}"',
+                        None, 
+                        [assignee.email], 
+                        fail_silently=False,
+                    )
             except User.DoesNotExist:
                 pass
 
