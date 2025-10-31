@@ -2,4 +2,4 @@ backend/.env
 backend/__pycache__/
 backend/*.pyc
 backend/venv/
-
+backend/media/

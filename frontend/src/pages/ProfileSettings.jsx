@@ -50,7 +50,7 @@ const ProfileSettings = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { 
+      if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size should be less than 5MB');
         return;
       }
@@ -68,8 +68,8 @@ const ProfileSettings = () => {
 
     try {
       const data = new FormData();
-      
-      
+
+
       if (formData.name !== userData?.name) {
         data.append('name', formData.name);
       }
@@ -110,23 +110,23 @@ const ProfileSettings = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="flex items-center text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
             Back
           </button>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="p-6 sm:p-8">
             <h1 className="text-2xl font-bold text-gray-900 mb-8">Profile Settings</h1>
-            
+
             <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="flex items-center justify-center space-x-8">
+              <div className="flex flex-col items-center justify-center space-x-8">
                 <div className="relative">
-                  <div className="w-32 h-32 rounded-full flex overflow-hidden bg-gray-100">
+                  <div className="w-32 h-32 rounded-full flex overflow-hidden bg-gray-100 mb-4">
                     {previewUrl ? (
                       <img
                         src={previewUrl}
@@ -139,7 +139,7 @@ const ProfileSettings = () => {
                       </div>
                     )}
                   </div>
-                  <label 
+                  <label
                     htmlFor="profile_picture"
                     className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors"
                   >
@@ -154,7 +154,7 @@ const ProfileSettings = () => {
                     className="hidden"
                   />
                 </div>
-                
+
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900">{formData.name}</h2>
                   <p className="text-gray-500">{formData.email}</p>

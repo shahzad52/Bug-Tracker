@@ -54,13 +54,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    def get_full_name(self):
-        return self.name
-
-    def get_short_name(self):
-        return self.name
-
-
 class Notification(models.Model):
     NOTIFICATION_TYPES = [
         ('project_addition', 'Added to Project'),

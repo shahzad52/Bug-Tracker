@@ -22,14 +22,18 @@ def upload_file(request):
         if not file.content_type in ['image/png', 'image/gif']:
             return Response({'error': 'Only PNG and GIF files are allowed for bug attachments'}, status=400)
         base_dir = settings.BUG_ATTACHMENTS_DIR
+
+
     elif upload_type == 'profile_picture':
         if not file.content_type.startswith('image/'):
             return Response({'error': 'Only image files are allowed for profile pictures'}, status=400)
         base_dir = settings.PROFILE_PICTURES_DIR
+
     elif upload_type == 'project_logo':
         if not file.content_type.startswith('image/'):
             return Response({'error': 'Only image files are allowed for project logos'}, status=400)
         base_dir = settings.PROJECT_LOGOS_DIR
+        
     else:
         return Response({'error': 'Invalid upload type'}, status=400)
     
