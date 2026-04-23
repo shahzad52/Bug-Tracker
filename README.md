@@ -42,7 +42,7 @@ A web application designed for managing software projects, tracking bugs, and fa
 
 ## Tech Stack (Example)
 
-* **Frontend:** React, Tailwind CSS, Axios, React Router
+* **Frontend:** React, Tailwind CSS,
 * **Backend:** Django, Django REST Framework
 * **Database:** PostgreSQL 
 * **Authentication:** JwtToken
